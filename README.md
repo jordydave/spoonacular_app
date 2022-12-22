@@ -1,4 +1,4 @@
-# spoonacular
+# SPOONACULAR
 
 A new Flutter project.
 
