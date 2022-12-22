@@ -9,7 +9,7 @@ class GetRandomRecipe {
 
   GetRandomRecipe(this._repository);
 
-  Future<Either<Failure, List<Recipe>>> execute() async {
-    return await _repository.getRandomRecipes();
+  Future<Either<Failure, List<Recipe>>> executeVegetarian() async {
+    return await _repository.getRandomVegetarianRecipes();
   }
 }

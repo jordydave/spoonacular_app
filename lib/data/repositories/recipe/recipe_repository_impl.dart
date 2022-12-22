@@ -19,10 +19,10 @@ class RecipeRepositoryImpl implements RecipeRepository {
   });
 
   @override
-  Future<Either<Failure, List<Recipe>>> getRandomRecipes() async {
+  Future<Either<Failure, List<Recipe>>> getRandomVegetarianRecipes() async {
     if (await networkInfo.isConnected) {
       try {
-        final result = await remoteDataSource.getRandomRecipes();
+        final result = await remoteDataSource.getRandomVegetarianRecipes();
 
         return Right(result.map((model) => model.toEntity()).toList());
       } on ServerException {

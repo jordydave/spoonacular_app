@@ -8,7 +8,7 @@ import 'package:spoonacular/utils/constant.dart';
 import '../../../utils/exception.dart';
 
 abstract class RecipeRemoteDataSource {
-  Future<List<RecipeModel>> getRandomRecipes();
+  Future<List<RecipeModel>> getRandomVegetarianRecipes();
 }
 
 class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
@@ -17,9 +17,9 @@ class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
   RecipeRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<RecipeModel>> getRandomRecipes() async {
+  Future<List<RecipeModel>> getRandomVegetarianRecipes() async {
     final response = await client.get(
-      Uri.parse('$baseUrl/random?number=10&$apiKey'),
+      Uri.parse('$baseUrl/random?number=100&$apiKey&tags=vegetarian'),
     );
     if (response.statusCode == 200) {
       return RecipeResponse.fromJson(json.decode(response.body)).recipeList;

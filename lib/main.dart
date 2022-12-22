@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spoonacular/injection.dart' as di;
-import 'package:spoonacular/presentation/bloc/recipe/random_recipe_bloc.dart';
+import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/presentation/pages/recipe/home_recipe_page.dart';
 import 'package:spoonacular/styles/colors.dart';
-import 'package:spoonacular/styles/text_styles.dart';
 import 'package:spoonacular/utils/utils.dart';
+
+import 'styles/text_styles.dart';
 
 void main() {
   di.init();
@@ -21,16 +22,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => di.locator<RandomRecipeBloc>(),
+          create: (context) => di.locator<RandomRecipeVegetarianBloc>(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Spoonacular',
-        theme: ThemeData.dark().copyWith(
+        theme: ThemeData(
           colorScheme: kColorScheme,
-          primaryColor: kRichBlack,
-          scaffoldBackgroundColor: kRichBlack,
+          primaryColor: kDavysGrey,
+          scaffoldBackgroundColor: kDavysGrey,
           textTheme: kTextTheme,
         ),
         home: const HomeRecipePage(),

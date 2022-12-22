@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spoonacular/presentation/bloc/recipe/random_recipe_bloc.dart';
+import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
+import 'package:spoonacular/styles/text_styles.dart';
+
+import '../../widgets/recipe/home_recipe_widget.dart';
 
 class HomeRecipePage extends StatefulWidget {
   const HomeRecipePage({super.key});
@@ -14,7 +17,9 @@ class _HomeRecipePageState extends State<HomeRecipePage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<RandomRecipeBloc>().add((const RandomRecipeRequested()));
+      context
+          .read<RandomRecipeVegetarianBloc>()
+          .add((const RandomRecipeVegetarianRequested()));
     });
   }
 
@@ -25,37 +30,37 @@ class _HomeRecipePageState extends State<HomeRecipePage> {
         title: const Text('Home Recipe'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BlocBuilder<RandomRecipeBloc, RandomRecipeState>(
-              builder: (context, state) {
-                if (state is RandomRecipeLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is RandomRecipeHasData) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: state.recipes.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                          state.recipes[index].title ?? 'No Title',
-                        ),
-                      );
-                    },
-                  );
-                } else if (state is RandomRecipeError) {
-                  return Center(
-                    child: Text(state.message),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Vegetarian Recipe',
+                style: kHeading5,
+              ),
+              BlocBuilder<RandomRecipeVegetarianBloc,
+                  RandomRecipeVegetarianState>(
+                builder: (context, state) {
+                  if (state is RandomRecipeVegetarianLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is RandomRecipeVegetarianHasData) {
+                    return HomeRecipeWidget(
+                      recipes: state.recipes,
+                    );
+                  } else if (state is RandomRecipeVegetarianError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

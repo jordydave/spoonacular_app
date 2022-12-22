@@ -12,6 +12,7 @@ class RecipeModel extends Equatable {
     this.veryPopular,
     this.sustainable,
     this.title,
+    this.image,
   });
 
   final bool? vegetarian;
@@ -23,6 +24,7 @@ class RecipeModel extends Equatable {
   final bool? veryPopular;
   final bool? sustainable;
   final String? title;
+  final String? image;
 
   factory RecipeModel.fromJson(Map<String, dynamic> json) => RecipeModel(
         vegetarian: json["vegetarian"],
@@ -34,6 +36,7 @@ class RecipeModel extends Equatable {
         veryPopular: json["veryPopular"],
         sustainable: json["sustainable"],
         title: json["title"],
+        image: json["image"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,19 +49,22 @@ class RecipeModel extends Equatable {
         "veryPopular": veryPopular,
         "sustainable": sustainable,
         "title": title,
+        "image": image,
       };
 
   Recipe toEntity() {
     return Recipe(
-        vegetarian: vegetarian,
-        vegan: vegan,
-        glutenFree: glutenFree,
-        dairyFree: dairyFree,
-        veryHealthy: veryHealthy,
-        cheap: cheap,
-        veryPopular: veryPopular,
-        sustainable: sustainable,
-        title: title);
+      vegetarian: vegetarian,
+      vegan: vegan,
+      glutenFree: glutenFree,
+      dairyFree: dairyFree,
+      veryHealthy: veryHealthy,
+      cheap: cheap,
+      veryPopular: veryPopular,
+      sustainable: sustainable,
+      title: title,
+      image: image,
+    );
   }
 
   @override
@@ -71,5 +77,6 @@ class RecipeModel extends Equatable {
         cheap,
         veryPopular,
         sustainable,
+        title,
       ];
 }
