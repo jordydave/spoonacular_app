@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spoonacular/domain/usecases/recipe/get_random_recipe.dart';
+import 'package:spoonacular/domain/usecases/recipe/get_random_vegetarian_recipe.dart';
 
 import '../../../domain/entities/recipe/recipe.dart';
 

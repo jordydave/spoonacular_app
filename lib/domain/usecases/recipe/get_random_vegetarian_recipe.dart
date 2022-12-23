@@ -4,12 +4,12 @@ import 'package:spoonacular/utils/failure.dart';
 
 import '../../repositories/recipe/recipe_repository.dart';
 
-class GetRandomRecipe {
+class GetRandomVegetarianRecipe {
   final RecipeRepository _repository;
 
-  GetRandomRecipe(this._repository);
+  GetRandomVegetarianRecipe(this._repository);
 
-  Future<Either<Failure, List<Recipe>>> executeVegetarian() async {
+  Future<Either<Failure, List<Recipe>>> execute() async {
     return await _repository.getRandomVegetarianRecipes();
   }
 }
