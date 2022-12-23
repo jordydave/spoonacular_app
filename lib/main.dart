@@ -4,6 +4,8 @@ import 'package:spoonacular/injection.dart' as di;
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_dessert_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/presentation/pages/recipe/home_recipe_page.dart';
+import 'package:spoonacular/presentation/pages/recipe/random_recipe_dessert_page.dart';
+import 'package:spoonacular/presentation/pages/recipe/random_recipe_vegetarian_page.dart';
 import 'package:spoonacular/styles/colors.dart';
 import 'package:spoonacular/utils/utils.dart';
 
@@ -48,7 +50,12 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const HomeRecipePage(),
               );
-
+            case RandomRecipeVegetarianPage.routeName:
+              return MaterialPageRoute(
+                  builder: (_) => const RandomRecipeVegetarianPage());
+            case RandomRecipeDessertPage.routeName:
+              return MaterialPageRoute(
+                  builder: (_) => const RandomRecipeDessertPage());
             default:
           }
           return null;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
-import 'package:spoonacular/styles/text_styles.dart';
+import 'package:spoonacular/presentation/pages/recipe/random_recipe_dessert_page.dart';
+import 'package:spoonacular/presentation/pages/recipe/random_recipe_vegetarian_page.dart';
+import 'package:spoonacular/presentation/widgets/see_more.dart';
 
 import '../../bloc/recipe/random_recipe_dessert_bloc.dart';
 import '../../widgets/recipe/home_recipe_widget.dart';
@@ -39,9 +41,14 @@ class _HomeRecipePageState extends State<HomeRecipePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Vegetarian Recipe',
-                style: kHeading5,
+              SeeMoreWidget(
+                title: 'Recipe Vegetarian',
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RandomRecipeVegetarianPage.routeName,
+                  );
+                },
               ),
               BlocBuilder<RandomRecipeVegetarianBloc,
                   RandomRecipeVegetarianState>(
@@ -64,12 +71,16 @@ class _HomeRecipePageState extends State<HomeRecipePage> {
                 },
               ),
               const SizedBox(height: 20),
-              Text(
-                'Dessert Recipe',
-                style: kHeading5,
+              SeeMoreWidget(
+                title: 'Recipe Dessert',
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RandomRecipeDessertPage.routeName,
+                  );
+                },
               ),
-              BlocBuilder<RandomRecipeDessertBloc,
-                  RandomRecipeDessertState>(
+              BlocBuilder<RandomRecipeDessertBloc, RandomRecipeDessertState>(
                 builder: (context, state) {
                   if (state is RandomRecipeDessertLoading) {
                     return const Center(
