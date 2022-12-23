@@ -9,6 +9,7 @@ import '../../../utils/exception.dart';
 
 abstract class RecipeRemoteDataSource {
   Future<List<RecipeModel>> getRandomVegetarianRecipes();
+  Future<List<RecipeModel>> getRandomDessertRecipes();
 }
 
 class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
@@ -20,6 +21,18 @@ class RecipeRemoteDataSourceImpl implements RecipeRemoteDataSource {
   Future<List<RecipeModel>> getRandomVegetarianRecipes() async {
     final response = await client.get(
       Uri.parse('$baseUrl/random?number=100&$apiKey&tags=vegetarian'),
+    );
+    if (response.statusCode == 200) {
+      return RecipeResponse.fromJson(json.decode(response.body)).recipeList;
+    } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<RecipeModel>> getRandomDessertRecipes() async {
+    final response = await client.get(
+      Uri.parse('$baseUrl/random?number=100&$apiKey&tags=dessert'),
     );
     if (response.statusCode == 200) {
       return RecipeResponse.fromJson(json.decode(response.body)).recipeList;

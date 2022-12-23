@@ -2,12 +2,14 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:spoonacular/data/datasources/recipe/recipe_remote_data_source.dart';
 import 'package:spoonacular/domain/usecases/recipe/get_random_vegetarian_recipe.dart';
+import 'package:spoonacular/presentation/bloc/recipe/random_recipe_dessert_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/utils/network_info.dart';
 import 'package:spoonacular/utils/ssl_pinning.dart';
 
 import 'data/repositories/recipe/recipe_repository_impl.dart';
 import 'domain/repositories/recipe/recipe_repository.dart';
+import 'domain/usecases/recipe/get_random_dessert_recipe.dart';
 
 final locator = GetIt.instance;
 
@@ -18,10 +20,20 @@ void init() {
       locator(),
     ),
   );
+  locator.registerFactory(
+    () => RandomRecipeDessertBloc(
+      locator(),
+    ),
+  );
 
   // Use cases
   locator.registerLazySingleton(
     () => GetRandomVegetarianRecipe(
+      locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetRandomDessertRecipe(
       locator(),
     ),
   );

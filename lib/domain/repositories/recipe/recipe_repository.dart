@@ -5,4 +5,5 @@ import '../../../utils/failure.dart';
 
 abstract class RecipeRepository {
   Future<Either<Failure, List<Recipe>>> getRandomVegetarianRecipes();
+  Future<Either<Failure, List<Recipe>>> getRandomDessertRecipes();
 }

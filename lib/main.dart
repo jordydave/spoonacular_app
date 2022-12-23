@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spoonacular/injection.dart' as di;
+import 'package:spoonacular/presentation/bloc/recipe/random_recipe_dessert_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/presentation/pages/recipe/home_recipe_page.dart';
 import 'package:spoonacular/styles/colors.dart';
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => di.locator<RandomRecipeVegetarianBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<RandomRecipeDessertBloc>(),
         ),
       ],
       child: MaterialApp(

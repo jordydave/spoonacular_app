@@ -34,4 +34,21 @@ class RecipeRepositoryImpl implements RecipeRepository {
       return const Left(ConnectionFailure('No Internet Connection'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Recipe>>> getRandomDessertRecipes() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getRandomVegetarianRecipes();
+
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return const Left(ServerFailure(''));
+      } on TlsException {
+        return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
+      }
+    } else {
+      return const Left(ConnectionFailure('No Internet Connection'));
+    }
+  }
 }
