@@ -10,4 +10,8 @@ abstract class RecipeRepository {
   Future<Either<Failure, RecipeDetail>> getRecipeDetail(int id);
   Future<Either<Failure, List<Recipe>>> searchRecipe(String query);
   Future<Either<Failure, List<Recipe>>> getSimilarRecipe(int id);
+  Future<Either<Failure, List<Recipe>>> getFavoriteRecipe();
+  Future<Either<Failure, String>> saveRecipe(RecipeDetail recipeDetail);
+  Future<Either<Failure, String>> removeRecipe(RecipeDetail recipeDetail);
+  Future<bool> isAddedToFavorite(int id);
 }
