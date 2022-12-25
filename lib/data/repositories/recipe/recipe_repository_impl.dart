@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe.dart';
+import 'package:spoonacular/domain/entities/recipe/recipe_detail.dart';
 import 'package:spoonacular/domain/repositories/recipe/recipe_repository.dart';
 import 'package:spoonacular/utils/failure.dart';
 import 'package:spoonacular/utils/network_info.dart';
@@ -49,6 +50,48 @@ class RecipeRepositoryImpl implements RecipeRepository {
       }
     } else {
       return const Left(ConnectionFailure('No Internet Connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RecipeDetail>> getRecipeDetail(int id) async {
+    try {
+      final result = await remoteDataSource.getRecipeDetail(id);
+      return Right(result.toEntity());
+    } on ServerException {
+      return const Left(ServerFailure(''));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Recipe>>> searchRecipe(String query) async {
+    try {
+      final result = await remoteDataSource.getSearchRecipe(query);
+      return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return const Left(ServerFailure(''));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Recipe>>> getSimilarRecipe(int id) async {
+    try {
+      final result = await remoteDataSource.getSimilarRecipe(id);
+      return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return const Left(ServerFailure(''));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 }

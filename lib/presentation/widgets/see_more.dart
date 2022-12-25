@@ -19,7 +19,7 @@ class SeeMoreWidget extends StatelessWidget {
       children: [
         Text(
           title,
-          style: kHeading6,
+          style: kHeading6.copyWith(fontWeight: FontWeight.w600),
         ),
         InkWell(
           borderRadius: BorderRadius.circular(10),

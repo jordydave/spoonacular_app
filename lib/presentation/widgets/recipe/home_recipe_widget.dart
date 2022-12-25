@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/entities/recipe/recipe.dart';
 import '../../../styles/text_styles.dart';
+import '../../pages/recipe/recipe_detail_page.dart';
 
 class HomeRecipeWidget extends StatelessWidget {
   final List<Recipe> recipes;
@@ -27,13 +28,23 @@ class HomeRecipeWidget extends StatelessWidget {
                 width: 200,
                 padding: const EdgeInsets.only(right: 8, top: 8),
                 child: InkWell(
-                  onTap: () {},
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      RecipeDetailPage.routeName,
+                      arguments: recipe.id,
+                    );
+                  },
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(
                       Radius.circular(16),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: recipe.image ?? '',
+                      imageUrl: recipe.image ??
+                          'https://spoonacular.com/recipeImages/${recipe.id}-556x370.jpg',
                       placeholder: (context, url) => const Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -47,7 +58,7 @@ class HomeRecipeWidget extends StatelessWidget {
                 width: 180,
                 child: Text(
                   recipe.title ?? '',
-                  style: kSubtitle,
+                  style: kSubtitle.copyWith(fontWeight: FontWeight.w500),
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

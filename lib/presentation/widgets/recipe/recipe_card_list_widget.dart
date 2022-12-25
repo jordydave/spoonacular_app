@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe.dart';
 
 import '../../../styles/text_styles.dart';
+import '../../pages/recipe/recipe_detail_page.dart';
 
 class RecipeCardListWidget extends StatelessWidget {
   final Recipe recipe;
@@ -14,7 +15,13 @@ class RecipeCardListWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            RecipeDetailPage.routeName,
+            arguments: recipe.id,
+          );
+        },
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [

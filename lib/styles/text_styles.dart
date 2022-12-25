@@ -28,9 +28,9 @@ const kColorScheme = ColorScheme(
   background: kRichBlack,
   error: Colors.red,
   onPrimary: kRichBlack,
-  onSecondary: Colors.white,
+  onSecondary: kRichBlack,
   onSurface: Colors.white,
-  onBackground: Colors.white,
+  onBackground: kRichBlack,
   onError: Colors.white,
-  brightness: Brightness.dark,
+  brightness: Brightness.light,
 );

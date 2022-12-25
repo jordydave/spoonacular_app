@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/presentation/pages/recipe/random_recipe_dessert_page.dart';
 import 'package:spoonacular/presentation/pages/recipe/random_recipe_vegetarian_page.dart';
+import 'package:spoonacular/presentation/pages/recipe/search_recipe_page.dart';
 import 'package:spoonacular/presentation/widgets/see_more.dart';
+import 'package:spoonacular/styles/colors.dart';
+import 'package:spoonacular/styles/text_styles.dart';
 
 import '../../bloc/recipe/random_recipe_dessert_bloc.dart';
 import '../../widgets/recipe/home_recipe_widget.dart';
@@ -33,7 +36,36 @@ class _HomeRecipePageState extends State<HomeRecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Recipe'),
+        backgroundColor: Colors.white,
+        elevation: 0.8,
+        title: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, SearchRecipePage.routeName);
+          },
+          child: Container(
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.grey,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.search,
+                  color: kDavysGrey,
+                ),
+                Text(
+                  "Search for recipes",
+                  style: kSubtitle,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
