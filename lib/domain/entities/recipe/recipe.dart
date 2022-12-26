@@ -7,6 +7,12 @@ class Recipe extends Equatable {
     this.id,
   });
 
+  const Recipe.favorite({
+    this.title,
+    this.image,
+    this.id,
+  });
+
   final String? title;
   final String? image;
   final int? id;

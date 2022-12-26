@@ -2,11 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe_detail.dart';
+import 'package:spoonacular/presentation/bloc/recipe/recipe_favorite_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/similar_recipe_bloc.dart';
+import 'package:spoonacular/presentation/pages/recipe/favorite_recipe_page.dart';
 import 'package:spoonacular/presentation/widgets/recipe/home_recipe_widget.dart';
 
 import '../../../styles/colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/constant.dart';
 import '../../bloc/recipe/recipe_detail_bloc.dart';
 
 class RecipeDetailPage extends StatefulWidget {
@@ -25,14 +28,22 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     super.initState();
     Future.microtask(() {
       context.read<RecipeDetailBloc>().add(RecipeDetailRequested(widget.id));
-    });
-    Future.microtask(() {
       context.read<SimilarRecipeBloc>().add(SimilarRecipeRequested(widget.id));
+      context.read<RecipeFavoriteBloc>().add(RecipeFavoriteStatus(widget.id));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isRecipeAddToFavorite = context.select<RecipeFavoriteBloc, bool>(
+      (bloc) {
+        if (bloc.state is RecipeFavoriteAdded) {
+          return (bloc.state as RecipeFavoriteAdded).isAdd;
+        } else {
+          return false;
+        }
+      },
+    );
     return Scaffold(
       body: BlocBuilder<RecipeDetailBloc, RecipeDetailState>(
         builder: (context, state) {
@@ -42,7 +53,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             );
           } else if (state is RecipeDetailHasData) {
             return SafeArea(
-              child: DetailContent(recipeDetail: state.recipeDetail),
+              child: DetailContent(
+                recipeDetail: state.recipeDetail,
+                isAddedToFavorite: isRecipeAddToFavorite,
+              ),
             );
           } else if (state is RecipeDetailError) {
             return Center(
@@ -57,11 +71,14 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   }
 }
 
+// ignore: must_be_immutable
 class DetailContent extends StatefulWidget {
   final RecipeDetail? recipeDetail;
-  const DetailContent({
+  bool? isAddedToFavorite;
+  DetailContent({
     super.key,
     required this.recipeDetail,
+    this.isAddedToFavorite,
   });
 
   @override
@@ -120,6 +137,85 @@ class _DetailContentState extends State<DetailContent> {
                             ),
                           ),
                           const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (!widget.isAddedToFavorite!) {
+                                context.read<RecipeFavoriteBloc>().add(
+                                    RecipeFavoriteAdd(widget.recipeDetail!));
+                              } else {
+                                context.read<RecipeFavoriteBloc>().add(
+                                    RecipeFavoriteRemove(widget.recipeDetail!));
+                              }
+                              final state =
+                                  BlocProvider.of<RecipeFavoriteBloc>(context)
+                                      .state;
+                              String message = '';
+
+                              if (state is RecipeFavoriteAdded) {
+                                final isAdded = state.isAdd;
+                                message = isAdded == false
+                                    ? recipeAddToFarite
+                                    : recipeRemoveFromFarite;
+                              } else {
+                                message = !widget.isAddedToFavorite!
+                                    ? recipeAddToFarite
+                                    : recipeRemoveFromFarite;
+                              }
+                              if (message == recipeAddToFarite ||
+                                  message == recipeRemoveFromFarite) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(message),
+                                        Expanded(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                FavoriteRecipePage.routeName,
+                                              );
+                                            },
+                                            child: Text(
+                                              "Go To Favorite",
+                                              style: kBodyText.copyWith(
+                                                color: kPrussianBlue,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(message),
+                                    );
+                                  },
+                                );
+                              }
+                              setState(() {
+                                widget.isAddedToFavorite =
+                                    !widget.isAddedToFavorite!;
+                              });
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                widget.isAddedToFavorite!
+                                    ? const Icon(Icons.check)
+                                    : const Icon(Icons.add),
+                                const Text('Favorite'),
+                              ],
+                            ),
+                          ),
                           Text(
                             'Ingredients',
                             style: kHeading6,

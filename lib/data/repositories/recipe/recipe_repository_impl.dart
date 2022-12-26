@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:spoonacular/data/datasources/recipe/recipe_local_data_source.dart';
+import 'package:spoonacular/data/models/recipe/recipe_table.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe_detail.dart';
 import 'package:spoonacular/domain/repositories/recipe/recipe_repository.dart';
@@ -12,10 +14,12 @@ import '../../datasources/recipe/recipe_remote_data_source.dart';
 
 class RecipeRepositoryImpl implements RecipeRepository {
   final RecipeRemoteDataSource remoteDataSource;
+  final RecipeLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   RecipeRepositoryImpl({
     required this.remoteDataSource,
+    required this.localDataSource,
     required this.networkInfo,
   });
 
@@ -24,6 +28,8 @@ class RecipeRepositoryImpl implements RecipeRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await remoteDataSource.getRandomVegetarianRecipes();
+        localDataSource.cacheRandomRecipeVegetarian(
+            result.map((recipe) => RecipeTable.fromDTO(recipe)).toList());
 
         return Right(result.map((model) => model.toEntity()).toList());
       } on ServerException {
@@ -32,7 +38,12 @@ class RecipeRepositoryImpl implements RecipeRepository {
         return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
       }
     } else {
-      return const Left(ConnectionFailure('No Internet Connection'));
+      try {
+        final result = await localDataSource.getCachedRandomRecipeVegetarian();
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 
@@ -93,5 +104,41 @@ class RecipeRepositoryImpl implements RecipeRepository {
     } on TlsException {
       return const Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
+  }
+
+  @override
+  Future<Either<Failure, String>> saveRecipe(RecipeDetail recipe) async {
+    try {
+      final result =
+          await localDataSource.insertRecipe(RecipeTable.fromEntity(recipe));
+      return Right(result);
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.message));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> removeRecipe(RecipeDetail recipe) async {
+    try {
+      final result =
+          await localDataSource.removeRecipe(RecipeTable.fromEntity(recipe));
+      return Right(result);
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Recipe>>> getFavoriteRecipe() async {
+    final result = await localDataSource.getFavoriteRecipe();
+    return Right(result.map((model) => model.toEntity()).toList());
+  }
+
+  @override
+  Future<bool> isAddedToFavorite(int id) async {
+    final result = await localDataSource.getRecipeById(id);
+    return result != null;
   }
 }

@@ -4,8 +4,10 @@ import 'package:spoonacular/injection.dart' as di;
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_dessert_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/random_recipe_vegetarian_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/recipe_detail_bloc.dart';
+import 'package:spoonacular/presentation/bloc/recipe/recipe_favorite_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/search_recipe_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/similar_recipe_bloc.dart';
+import 'package:spoonacular/presentation/pages/recipe/favorite_recipe_page.dart';
 import 'package:spoonacular/presentation/pages/recipe/home_recipe_page.dart';
 import 'package:spoonacular/presentation/pages/recipe/random_recipe_dessert_page.dart';
 import 'package:spoonacular/presentation/pages/recipe/random_recipe_vegetarian_page.dart';
@@ -43,6 +45,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.locator<SimilarRecipeBloc>(),
         ),
+        BlocProvider(
+          create: (context) => di.locator<RecipeFavoriteBloc>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -78,7 +83,13 @@ class MyApp extends StatelessWidget {
               );
             case SearchRecipePage.routeName:
               return MaterialPageRoute(
-                  builder: (_) => const SearchRecipePage());
+                builder: (_) => const SearchRecipePage(),
+              );
+            case FavoriteRecipePage.routeName:
+              return MaterialPageRoute(
+                builder: (_) => const FavoriteRecipePage(),
+              );
+
             default:
           }
           return null;
