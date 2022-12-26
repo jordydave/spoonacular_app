@@ -8,13 +8,15 @@ class IngredientsModel extends Equatable {
   final double? amount;
   final String? unit;
   final List<NutrientsModel>? nutrients;
-
+  final String? image;
+  
   const IngredientsModel({
     required this.id,
     required this.name,
     required this.amount,
     required this.unit,
     required this.nutrients,
+    required this.image,
   });
 
   factory IngredientsModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class IngredientsModel extends Equatable {
               .map((e) => NutrientsModel.fromJson(e))
               .toList()
           : null,
+      image: json['image'],
     );
   }
 
@@ -37,6 +40,7 @@ class IngredientsModel extends Equatable {
         'amount': amount,
         'unit': unit,
         'nutrients': nutrients?.map((e) => e.toJson()).toList(),
+        'image': image,
       };
 
   Ingredients toEntity() {
@@ -46,6 +50,7 @@ class IngredientsModel extends Equatable {
       amount: amount,
       unit: unit,
       nutrients: nutrients?.map((e) => e.toEntity()).toList(),
+      image: image,
     );
   }
 
@@ -56,5 +61,6 @@ class IngredientsModel extends Equatable {
         amount,
         unit,
         nutrients,
+        image,
       ];
 }

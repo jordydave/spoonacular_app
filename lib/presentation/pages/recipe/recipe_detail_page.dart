@@ -70,6 +70,14 @@ class DetailContent extends StatefulWidget {
 
 class _DetailContentState extends State<DetailContent> {
   bool _customTileExpanded = false;
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -244,6 +252,238 @@ class _DetailContentState extends State<DetailContent> {
                               }
                             },
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Instructions',
+                                style: kHeading6,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16),
+                                        ),
+                                      ),
+                                      context: context,
+                                      builder: (context) {
+                                        return PageView.builder(
+                                            controller: _pageController,
+                                            itemCount: widget
+                                                .recipeDetail!
+                                                .analyzedInstructions![0]
+                                                .steps!
+                                                .length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final orientation =
+                                                  MediaQuery.of(context)
+                                                      .orientation;
+                                              return Container(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 50.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Text(
+                                                            'Step ${index + 1} / ${widget.recipeDetail!.analyzedInstructions![0].steps!.length}',
+                                                            style: kHeading6,
+                                                          ),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                if (index + 1 !=
+                                                                    widget
+                                                                        .recipeDetail!
+                                                                        .analyzedInstructions![
+                                                                            0]
+                                                                        .steps!
+                                                                        .length) {
+                                                                  if (_pageController
+                                                                      .hasClients) {
+                                                                    _pageController
+                                                                        .animateToPage(
+                                                                      index + 2,
+                                                                      duration: const Duration(
+                                                                          milliseconds:
+                                                                              400),
+                                                                      curve: Curves
+                                                                          .easeInOut,
+                                                                    );
+                                                                  }
+                                                                } else {
+                                                                  if (_pageController
+                                                                      .hasClients) {
+                                                                    _pageController
+                                                                        .animateToPage(
+                                                                      0,
+                                                                      duration: const Duration(
+                                                                          milliseconds:
+                                                                              400),
+                                                                      curve: Curves
+                                                                          .easeInOut,
+                                                                    );
+                                                                  }
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                index + 1 !=
+                                                                        widget
+                                                                            .recipeDetail!
+                                                                            .analyzedInstructions![0]
+                                                                            .steps!
+                                                                            .length
+                                                                    ? 'Jump 2 step'
+                                                                    : 'Jump to first step',
+                                                              ))
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        'Step ${index + 1}',
+                                                        style: kHeading6,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Text(
+                                                        widget
+                                                            .recipeDetail!
+                                                            .analyzedInstructions![
+                                                                0]
+                                                            .steps![index]
+                                                            .step
+                                                            .toString(),
+                                                        style: kSubtitle,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      Text(
+                                                        'Ingredients',
+                                                        style: kHeading6,
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Expanded(
+                                                        child: GridView.builder(
+                                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount:
+                                                                  (orientation ==
+                                                                          Orientation
+                                                                              .portrait)
+                                                                      ? 3
+                                                                      : 3),
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          itemCount: widget
+                                                              .recipeDetail!
+                                                              .analyzedInstructions![
+                                                                  0]
+                                                              .steps![index]
+                                                              .ingredients!
+                                                              .length,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int i) {
+                                                            return Column(
+                                                              children: [
+                                                                Text(
+                                                                  widget
+                                                                      .recipeDetail!
+                                                                      .analyzedInstructions![
+                                                                          0]
+                                                                      .steps![
+                                                                          index]
+                                                                      .ingredients![
+                                                                          i]
+                                                                      .name
+                                                                      .toString(),
+                                                                  style:
+                                                                      kSubtitle,
+                                                                ),
+                                                                CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      'https://spoonacular.com/cdn/ingredients_100x100/${widget.recipeDetail!.analyzedInstructions![0].steps![index].ingredients![i].image}',
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.15,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      const Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(),
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .error),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      });
+                                },
+                                child: Text(
+                                  'View All',
+                                  style:
+                                      kSubtitle.copyWith(color: kMikadoYellow),
+                                ),
+                              )
+                            ],
+                          ),
+                          widget.recipeDetail!.analyzedInstructions!.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: widget.recipeDetail!
+                                      .analyzedInstructions![0].steps!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Step ${index + 1}',
+                                          style: kHeading6,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          widget
+                                                  .recipeDetail
+                                                  ?.analyzedInstructions![0]
+                                                  .steps![index]
+                                                  .step ??
+                                              '',
+                                          style: kSubtitle,
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    );
+                                  },
+                                )
+                              : const Text('No Instructions'),
                         ],
                       ),
                     ),

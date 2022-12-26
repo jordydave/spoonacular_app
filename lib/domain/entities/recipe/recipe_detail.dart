@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:spoonacular/domain/entities/recipe/analyzed_instructions.dart';
 import 'package:spoonacular/domain/entities/recipe/extended_ingredients.dart';
 import 'package:spoonacular/domain/entities/recipe/nutrition.dart';
 
@@ -19,6 +20,7 @@ class RecipeDetail extends Equatable {
   final Nutrition? nutrition;
   final List<String>? cuisines;
   final List<String>? dishTypes;
+  final List<AnalyzedInstructions>? analyzedInstructions;
 
   const RecipeDetail({
     required this.id,
@@ -37,6 +39,7 @@ class RecipeDetail extends Equatable {
     required this.nutrition,
     required this.cuisines,
     required this.dishTypes,
+    required this.analyzedInstructions,
   });
 
   @override

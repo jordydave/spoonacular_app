@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:spoonacular/data/models/recipe/analyzed_instructions_model.dart';
 import 'package:spoonacular/data/models/recipe/extended_ingredients_model.dart';
 import 'package:spoonacular/data/models/recipe/nutrition_model.dart';
 import 'package:spoonacular/domain/entities/recipe/recipe_detail.dart';
@@ -20,6 +21,7 @@ class RecipeDetailResponse extends Equatable {
   final NutritionModel? nutrition;
   final List<String>? cuisines;
   final List<String>? dishTypes;
+  final List<AnalyzedInstructionsModel>? analyzedInstructions;
 
   const RecipeDetailResponse({
     required this.id,
@@ -38,6 +40,7 @@ class RecipeDetailResponse extends Equatable {
     required this.nutrition,
     required this.cuisines,
     required this.dishTypes,
+    required this.analyzedInstructions,
   });
 
   factory RecipeDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -68,6 +71,11 @@ class RecipeDetailResponse extends Equatable {
       dishTypes: json['dishTypes'] != null
           ? (json['dishTypes'] as List).map((e) => e.toString()).toList()
           : null,
+      analyzedInstructions: json['analyzedInstructions'] != null
+          ? (json['analyzedInstructions'] as List)
+              .map((e) => AnalyzedInstructionsModel.fromJson(e))
+              .toList()
+          : null,
     );
   }
 
@@ -91,6 +99,9 @@ class RecipeDetailResponse extends Equatable {
         'cuisines': cuisines != null ? cuisines!.map((e) => e).toList() : null,
         'dishTypes':
             dishTypes != null ? dishTypes!.map((e) => e).toList() : null,
+        'analyzedInstructions': analyzedInstructions != null
+            ? analyzedInstructions!.map((e) => e.toJson()).toList()
+            : null,
       };
 
   RecipeDetail toEntity() {
@@ -113,6 +124,9 @@ class RecipeDetailResponse extends Equatable {
       nutrition: nutrition != null ? nutrition!.toEntity() : null,
       cuisines: cuisines != null ? cuisines!.map((e) => e).toList() : null,
       dishTypes: dishTypes != null ? dishTypes!.map((e) => e).toList() : null,
+      analyzedInstructions: analyzedInstructions != null
+          ? analyzedInstructions!.map((e) => e.toEntity()).toList()
+          : null,
     );
   }
 
@@ -134,5 +148,6 @@ class RecipeDetailResponse extends Equatable {
         nutrition,
         cuisines,
         dishTypes,
+        analyzedInstructions,
       ];
 }

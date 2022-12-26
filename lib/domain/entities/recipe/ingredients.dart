@@ -7,6 +7,7 @@ class Ingredients extends Equatable {
   final double? amount;
   final String? unit;
   final List<Nutrients>? nutrients;
+  final String? image;
 
   const Ingredients({
     required this.id,
@@ -14,6 +15,7 @@ class Ingredients extends Equatable {
     required this.amount,
     required this.unit,
     required this.nutrients,
+    required this.image,
   });
 
   @override
@@ -23,5 +25,6 @@ class Ingredients extends Equatable {
         amount,
         unit,
         nutrients,
+        image,
       ];
 }
