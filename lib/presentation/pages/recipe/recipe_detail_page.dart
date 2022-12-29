@@ -378,7 +378,10 @@ class _DetailContentState extends State<DetailContent> {
                                               final orientation =
                                                   MediaQuery.of(context)
                                                       .orientation;
-                                              return Container(
+                                              return widget
+                                                .recipeDetail!
+                                                .analyzedInstructions![0]
+                                                .steps! != null ? Container(
                                                 padding:
                                                     const EdgeInsets.all(16),
                                                 child: Padding(
@@ -399,52 +402,111 @@ class _DetailContentState extends State<DetailContent> {
                                                             'Step ${index + 1} / ${widget.recipeDetail!.analyzedInstructions![0].steps!.length}',
                                                             style: kHeading6,
                                                           ),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                if (index + 1 !=
-                                                                    widget
-                                                                        .recipeDetail!
-                                                                        .analyzedInstructions![
-                                                                            0]
-                                                                        .steps!
-                                                                        .length) {
-                                                                  if (_pageController
-                                                                      .hasClients) {
-                                                                    _pageController
-                                                                        .animateToPage(
-                                                                      index + 2,
-                                                                      duration: const Duration(
-                                                                          milliseconds:
-                                                                              400),
-                                                                      curve: Curves
-                                                                          .easeInOut,
-                                                                    );
-                                                                  }
-                                                                } else {
-                                                                  if (_pageController
-                                                                      .hasClients) {
-                                                                    _pageController
-                                                                        .animateToPage(
-                                                                      0,
-                                                                      duration: const Duration(
-                                                                          milliseconds:
-                                                                              400),
-                                                                      curve: Curves
-                                                                          .easeInOut,
-                                                                    );
-                                                                  }
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                index + 1 !=
+                                                          Column(
+                                                            children: [
+                                                              Visibility(
+                                                                visible: index + 1 !=
+                                                                              widget
+                                                                                  .recipeDetail!
+                                                                                  .analyzedInstructions![0]
+                                                                                  .steps!
+                                                                                  .length ? true : false,
+                                                                child: GestureDetector(
+                                                                    onTap: () {
+                                                                      if (index + 1 !=
+                                                                          widget
+                                                                              .recipeDetail!
+                                                                              .analyzedInstructions![
+                                                                                  0]
+                                                                              .steps!
+                                                                              .length) {
+                                                                        if (_pageController
+                                                                            .hasClients) {
+                                                                          _pageController
+                                                                              .animateToPage(
+                                                                            index + 1,
+                                                                            duration: const Duration(
+                                                                                milliseconds:
+                                                                                    400),
+                                                                            curve: Curves
+                                                                                .easeInOut,
+                                                                          );
+                                                                        }
+                                                                      } else {
+                                                                        if (_pageController
+                                                                            .hasClients) {
+                                                                          _pageController
+                                                                              .animateToPage(
+                                                                            0,
+                                                                            duration: const Duration(
+                                                                                milliseconds:
+                                                                                    400),
+                                                                            curve: Curves
+                                                                                .easeInOut,
+                                                                          );
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                    child: Text(
+                                                                      index + 1 !=
+                                                                              widget
+                                                                                  .recipeDetail!
+                                                                                  .analyzedInstructions![0]
+                                                                                  .steps!
+                                                                                  .length
+                                                                          ? 'Next step'
+                                                                          : 'Jump to first step' ,style: kBodyText,
+                                                                    )),
+                                                              ),
+                                                            SizedBox(height: 16),
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    if (index + 1 !=
                                                                         widget
                                                                             .recipeDetail!
-                                                                            .analyzedInstructions![0]
+                                                                            .analyzedInstructions![
+                                                                                0]
                                                                             .steps!
-                                                                            .length
-                                                                    ? 'Jump 2 step'
-                                                                    : 'Jump to first step',
-                                                              ))
+                                                                            .length) {
+                                                                      if (_pageController
+                                                                          .hasClients) {
+                                                                        _pageController
+                                                                            .animateToPage(
+                                                                          index + 2,
+                                                                          duration: const Duration(
+                                                                              milliseconds:
+                                                                                  400),
+                                                                          curve: Curves
+                                                                              .easeInOut,
+                                                                        );
+                                                                      }
+                                                                    } else {
+                                                                      if (_pageController
+                                                                          .hasClients) {
+                                                                        _pageController
+                                                                            .animateToPage(
+                                                                          0,
+                                                                          duration: const Duration(
+                                                                              milliseconds:
+                                                                                  400),
+                                                                          curve: Curves
+                                                                              .easeInOut,
+                                                                        );
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  child: Text(
+                                                                    index + 1 !=
+                                                                            widget
+                                                                                .recipeDetail!
+                                                                                .analyzedInstructions![0]
+                                                                                .steps!
+                                                                                .length
+                                                                        ? 'Jump 2 step'
+                                                                        : 'Jump to first step',
+                                                                  )),
+                                                            ],
+                                                          )
                                                         ],
                                                       ),
                                                       Text(
@@ -507,26 +569,28 @@ class _DetailContentState extends State<DetailContent> {
                                                                   style:
                                                                       kSubtitle,
                                                                 ),
-                                                                CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      'https://spoonacular.com/cdn/ingredients_100x100/${widget.recipeDetail!.analyzedInstructions![0].steps![index].ingredients![i].image}',
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.15,
-                                                                  placeholder: (context,
-                                                                          url) =>
-                                                                      const Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(),
+                                                                Container(
+                                                                  width: 50,
+                                                                  height: 50,
+                                                                        
+                                                                  child: CachedNetworkImage(
+                                                                    fit: BoxFit.contain,
+                                                                    imageUrl:
+                                                                        'https://spoonacular.com/cdn/ingredients_100x100/${widget.recipeDetail!.analyzedInstructions![0].steps![index].ingredients![i].image}',
+                                                                    
+                                                                    placeholder: (context,
+                                                                            url) =>
+                                                                        const Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(),
+                                                                    ),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        const Icon(
+                                                                            Icons
+                                                                                .error),
                                                                   ),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      const Icon(
-                                                                          Icons
-                                                                              .error),
                                                                 ),
                                                               ],
                                                             );
@@ -536,7 +600,7 @@ class _DetailContentState extends State<DetailContent> {
                                                     ],
                                                   ),
                                                 ),
-                                              );
+                                              ) : Center(child: Text('No Instruction', style: kHeading5,));
                                             });
                                       });
                                 },
