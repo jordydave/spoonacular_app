@@ -6,6 +6,7 @@ import 'package:spoonacular/presentation/bloc/recipe/recipe_favorite_bloc.dart';
 import 'package:spoonacular/presentation/bloc/recipe/similar_recipe_bloc.dart';
 import 'package:spoonacular/presentation/pages/recipe/favorite_recipe_page.dart';
 import 'package:spoonacular/presentation/widgets/recipe/home_recipe_widget.dart';
+import 'package:spoonacular/presentation/widgets/recipe/instruction_detail_widget.dart';
 
 import '../../../styles/colors.dart';
 import '../../../styles/text_styles.dart';
@@ -289,6 +290,10 @@ class _DetailContentState extends State<DetailContent> {
                                           .nutrients?.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
+                                        final recipeDetailNutritionNutrient =
+                                            widget.recipeDetail!.nutrition!
+                                                .nutrients![index];
+
                                         return Container(
                                           decoration: const BoxDecoration(
                                             border: Border(
@@ -303,12 +308,12 @@ class _DetailContentState extends State<DetailContent> {
                                             dense: true,
                                             contentPadding: EdgeInsets.zero,
                                             leading: Text(
-                                              widget.recipeDetail!.nutrition!
-                                                      .nutrients![index].name ??
+                                              recipeDetailNutritionNutrient
+                                                      .name ??
                                                   "",
                                             ),
                                             trailing: Text(
-                                              "${widget.recipeDetail!.nutrition!.nutrients![index].amount.toString()} ${widget.recipeDetail!.nutrition!.nutrients![index].unit!}",
+                                              "${recipeDetailNutritionNutrient.amount.toString()} ${recipeDetailNutritionNutrient.unit!}",
                                             ),
                                           ),
                                         );
@@ -355,261 +360,33 @@ class _DetailContentState extends State<DetailContent> {
                                 'Instructions',
                                 style: kHeading6,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16),
+                              widget.recipeDetail!.analyzedInstructions!
+                                      .isNotEmpty
+                                  ? TextButton(
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16),
+                                            ),
+                                          ),
+                                          context: context,
+                                          builder: (context) {
+                                            return InstructionDetailWidget(
+                                              recipeDetail: widget.recipeDetail,
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text(
+                                        'View All',
+                                        style: kSubtitle.copyWith(
+                                          color: kMikadoYellow,
                                         ),
                                       ),
-                                      context: context,
-                                      builder: (context) {
-                                        return PageView.builder(
-                                            controller: _pageController,
-                                            itemCount: widget
-                                                .recipeDetail!
-                                                .analyzedInstructions![0]
-                                                .steps!
-                                                .length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              final orientation =
-                                                  MediaQuery.of(context)
-                                                      .orientation;
-                                              return widget
-                                                .recipeDetail!
-                                                .analyzedInstructions![0]
-                                                .steps! != null ? Container(
-                                                padding:
-                                                    const EdgeInsets.all(16),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 50.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Text(
-                                                            'Step ${index + 1} / ${widget.recipeDetail!.analyzedInstructions![0].steps!.length}',
-                                                            style: kHeading6,
-                                                          ),
-                                                          Column(
-                                                            children: [
-                                                              Visibility(
-                                                                visible: index + 1 !=
-                                                                              widget
-                                                                                  .recipeDetail!
-                                                                                  .analyzedInstructions![0]
-                                                                                  .steps!
-                                                                                  .length ? true : false,
-                                                                child: GestureDetector(
-                                                                    onTap: () {
-                                                                      if (index + 1 !=
-                                                                          widget
-                                                                              .recipeDetail!
-                                                                              .analyzedInstructions![
-                                                                                  0]
-                                                                              .steps!
-                                                                              .length) {
-                                                                        if (_pageController
-                                                                            .hasClients) {
-                                                                          _pageController
-                                                                              .animateToPage(
-                                                                            index + 1,
-                                                                            duration: const Duration(
-                                                                                milliseconds:
-                                                                                    400),
-                                                                            curve: Curves
-                                                                                .easeInOut,
-                                                                          );
-                                                                        }
-                                                                      } else {
-                                                                        if (_pageController
-                                                                            .hasClients) {
-                                                                          _pageController
-                                                                              .animateToPage(
-                                                                            0,
-                                                                            duration: const Duration(
-                                                                                milliseconds:
-                                                                                    400),
-                                                                            curve: Curves
-                                                                                .easeInOut,
-                                                                          );
-                                                                        }
-                                                                      }
-                                                                    },
-                                                                    child: Text(
-                                                                      index + 1 !=
-                                                                              widget
-                                                                                  .recipeDetail!
-                                                                                  .analyzedInstructions![0]
-                                                                                  .steps!
-                                                                                  .length
-                                                                          ? 'Next step'
-                                                                          : 'Jump to first step' ,style: kBodyText,
-                                                                    )),
-                                                              ),
-                                                            SizedBox(height: 16),
-                                                              GestureDetector(
-                                                                  onTap: () {
-                                                                    if (index + 1 !=
-                                                                        widget
-                                                                            .recipeDetail!
-                                                                            .analyzedInstructions![
-                                                                                0]
-                                                                            .steps!
-                                                                            .length) {
-                                                                      if (_pageController
-                                                                          .hasClients) {
-                                                                        _pageController
-                                                                            .animateToPage(
-                                                                          index + 2,
-                                                                          duration: const Duration(
-                                                                              milliseconds:
-                                                                                  400),
-                                                                          curve: Curves
-                                                                              .easeInOut,
-                                                                        );
-                                                                      }
-                                                                    } else {
-                                                                      if (_pageController
-                                                                          .hasClients) {
-                                                                        _pageController
-                                                                            .animateToPage(
-                                                                          0,
-                                                                          duration: const Duration(
-                                                                              milliseconds:
-                                                                                  400),
-                                                                          curve: Curves
-                                                                              .easeInOut,
-                                                                        );
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                    index + 1 !=
-                                                                            widget
-                                                                                .recipeDetail!
-                                                                                .analyzedInstructions![0]
-                                                                                .steps!
-                                                                                .length
-                                                                        ? 'Jump 2 step'
-                                                                        : 'Jump to first step',
-                                                                  )),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
-                                                      Text(
-                                                        'Step ${index + 1}',
-                                                        style: kHeading6,
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Text(
-                                                        widget
-                                                            .recipeDetail!
-                                                            .analyzedInstructions![
-                                                                0]
-                                                            .steps![index]
-                                                            .step
-                                                            .toString(),
-                                                        style: kSubtitle,
-                                                      ),
-                                                      const SizedBox(
-                                                          height: 16),
-                                                      Text(
-                                                        'Ingredients',
-                                                        style: kHeading6,
-                                                      ),
-                                                      const SizedBox(height: 8),
-                                                      Expanded(
-                                                        child: GridView.builder(
-                                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                              crossAxisCount:
-                                                                  (orientation ==
-                                                                          Orientation
-                                                                              .portrait)
-                                                                      ? 3
-                                                                      : 3),
-                                                          physics:
-                                                              const NeverScrollableScrollPhysics(),
-                                                          itemCount: widget
-                                                              .recipeDetail!
-                                                              .analyzedInstructions![
-                                                                  0]
-                                                              .steps![index]
-                                                              .ingredients!
-                                                              .length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int i) {
-                                                            return Column(
-                                                              children: [
-                                                                Text(
-                                                                  widget
-                                                                      .recipeDetail!
-                                                                      .analyzedInstructions![
-                                                                          0]
-                                                                      .steps![
-                                                                          index]
-                                                                      .ingredients![
-                                                                          i]
-                                                                      .name
-                                                                      .toString(),
-                                                                  style:
-                                                                      kSubtitle,
-                                                                ),
-                                                                Container(
-                                                                  width: 50,
-                                                                  height: 50,
-                                                                        
-                                                                  child: CachedNetworkImage(
-                                                                    fit: BoxFit.contain,
-                                                                    imageUrl:
-                                                                        'https://spoonacular.com/cdn/ingredients_100x100/${widget.recipeDetail!.analyzedInstructions![0].steps![index].ingredients![i].image}',
-                                                                    
-                                                                    placeholder: (context,
-                                                                            url) =>
-                                                                        const Center(
-                                                                      child:
-                                                                          CircularProgressIndicator(),
-                                                                    ),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        const Icon(
-                                                                            Icons
-                                                                                .error),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ) : Center(child: Text('No Instruction', style: kHeading5,));
-                                            });
-                                      });
-                                },
-                                child: Text(
-                                  'View All',
-                                  style:
-                                      kSubtitle.copyWith(color: kMikadoYellow),
-                                ),
-                              )
+                                    )
+                                  : const SizedBox(),
                             ],
                           ),
                           widget.recipeDetail!.analyzedInstructions!.isNotEmpty
